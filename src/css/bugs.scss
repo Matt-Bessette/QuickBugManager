@@ -1,0 +1,60 @@
+ul {
+	list-style-type: none;
+	overflow-y:auto;
+	height:100%;
+}
+.bugObject {
+	border: 1px solid black;
+	cursor:pointer;
+	font-family: "Times New Roman", Times, serif;
+	width: 85%;
+}
+.bugObject2{
+	cursor:pointer;
+	padding: 5px;
+	padding: 3px;
+}
+.bugObject:hover {
+	color:#1EA1DB;
+	border-color:#1EA1DB;
+}
+.bugObject2:hover {
+	border: 1px solid black;
+}
+.edit{
+	padding: 5px;
+	margin-bottom: 10px;
+}
+.container { 
+	height: 90%;
+	width:100%;
+	padding : 5px;
+	margin-top : 50px;
+	box-shadow : 0 4px 10px #777;
+
+}
+.styling{
+	border-bottom: 1px solid black;
+}
+.comment {
+	box-shadow : 0 4px 10px #777;
+}
+.view {
+	overflow-y:auto;
+	height: 100%;
+}
+.state-unread {
+
+}
+.state-wip {
+	background-color:#FAEBCC;
+}
+.state-complete {
+	background-color:#D6E9C6;
+}
+.state-scrapped {
+	background-color:#F2DEDE;
+}
+.pad {
+	padding-top : 5px;
+}

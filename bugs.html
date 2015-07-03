@@ -1,0 +1,18 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="lib/css/normalize.css">
+		<link rel="stylesheet" type="text/css" href="lib/css/skeleton.css">
+		<link rel="stylesheet" type="text/css" href="bin/css/bugs.css">
+		<script src='lib/js/jquery.js'></script>
+		<script src='lib/js/react.js'></script>
+		<script src='bin/js/bugs.js'></script>
+	</head>
+	<body>
+		<div id="app"></div>
+	</body>
+	<script type='text/jsx'>
+		$(document).ready(function(){
+			React.render(<App />, document.getElementById('app'));
+		});
+	</script>
+</html>
