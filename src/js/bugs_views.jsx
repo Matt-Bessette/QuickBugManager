@@ -126,7 +126,7 @@ var BugView = React.createClass({
 		}
 		return (
 			<div className="bugView">
-				Bug #<span className="bugID">{this.state.bugID}</span> - <span className="status">{status}</span><br/>
+				<span className="bugID">Bug # {this.state.bugID}</span><span className="status"> - {status}</span><br/>
 				Project:<span className="project-name">{this.state.project}</span><br/>
 				Owner:<span className="owner">{this.state.owner}</span><br/>
 				Type:<span className="bug-type toSelectionType">{this.state.type}</span><br/>

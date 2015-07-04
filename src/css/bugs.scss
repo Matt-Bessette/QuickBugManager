@@ -12,13 +12,18 @@ ul {
 	font-family: "Times New Roman", Times, serif;
 	width: 85%;
 }
+
+.left-menu {
+	max-height:$menuHeight;
+	position:fixed;
+	max-width:$menuWidth;
+}
+
 .bug, .project{
 	cursor:pointer;
-	padding: 5px;
-	padding: 3px;
-	max-width:$menuWidth;
-	width:$menuWidth;
-	max-height:$menuHeight;
+	padding-left: 15px;
+	margin-left:10px;
+	max-width:100%;
 }
 
 .bug {
@@ -30,6 +35,31 @@ ul {
 	color:#1EA1DB;
 	border-color:#1EA1DB;
 }
+
+.bugView, .projectView {
+	left: $menuWidth + 2%;
+	top: 0;
+	position:absolute;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .bugObject2:hover {
 	border: 1px solid black;
 }
@@ -70,7 +100,4 @@ ul {
 }
 .OnHold {
 	background-color:#9370DB;
-}
-.pad {
-	padding-top : 5px;
 }
