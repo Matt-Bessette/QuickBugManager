@@ -30,7 +30,7 @@
 		echo json_encode(array("error"=>"User must be logged in"));
 	}
 
-	function getActions($con, $action, $user, $val1) {
+	function getActions($con, $action, $val1, $user) {
 		switch($action) {
 			case "all-projects":
 				$stmt = $con->prepare(
@@ -71,7 +71,7 @@
 
 			case "bug-profile":
 				$stmt = $con->prepare(
-					"SELECT projects.name, bugs.projID, bugs.bugID, users.name as owner, bugs.dev, bugs.submitted, bugs.status, bugs.type, bugs.description, bugs.browser, modules.name as module
+					"SELECT projects.name, bugs.projID, users.name as owner, bugs.dev, bugs.submitted, bugs.status, bugs.type, bugs.description, bugs.browser, modules.name as module
 					FROM bugs
 					INNER JOIN projects ON projects.projID = bugs.projID
 					INNER JOIN modules ON modules.moduleID = bugs.moduleID
