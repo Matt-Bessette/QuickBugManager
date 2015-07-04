@@ -25,18 +25,18 @@ DROP TABLE IF EXISTS `bugs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bugs` (
-  `projID` int(11) NOT NULL,
   `bugID` int(11) NOT NULL AUTO_INCREMENT,
+  `projID` int(11) NOT NULL,
   `moduleID` int(11) DEFAULT NULL,
   `maker` int(11) DEFAULT NULL,
-  `mod` int(11) DEFAULT NULL,
+  `dev` int(11) DEFAULT NULL,
   `description` varchar(2048) DEFAULT NULL,
   `browser` varchar(256) DEFAULT NULL,
   `type` varchar(256) DEFAULT NULL,
   `submitted` varchar(128) DEFAULT NULL,
   `status` varchar(64) DEFAULT 'unread',
-  PRIMARY KEY (`projID`,`bugID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`bugID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,14 +47,13 @@ DROP TABLE IF EXISTS `comments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `comments` (
-  `projID` int(11) NOT NULL,
-  `bugID` int(11) NOT NULL,
   `commentID` int(11) NOT NULL AUTO_INCREMENT,
+  `bugID` int(11) NOT NULL,
   `userID` int(11) DEFAULT NULL,
   `comment` varchar(2048) DEFAULT NULL,
   `submitted` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`projID`,`bugID`,`commentID`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`commentID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,11 +64,11 @@ DROP TABLE IF EXISTS `modules`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `modules` (
+  `moduleID` int(11) NOT NULL AUTO_INCREMENT,
   `projID` int(11) NOT NULL,
-  `moduleID` int(11) DEFAULT NULL,
   `name` varchar(128) DEFAULT NULL,
-  PRIMARY KEY (`projID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`moduleID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -85,7 +84,6 @@ CREATE TABLE `projects` (
   `name` varchar(128) DEFAULT NULL,
   `version` varchar(128) DEFAULT NULL,
   `submitted` varchar(128) DEFAULT NULL,
-  `locked` int(1) DEFAULT '1',
   PRIMARY KEY (`projID`),
   UNIQUE KEY `projID_UNIQUE` (`projID`),
   KEY `owner_idx` (`userID`),
@@ -101,10 +99,10 @@ DROP TABLE IF EXISTS `tags`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tags` (
-  `projID` int(11) NOT NULL,
   `bugID` int(11) NOT NULL,
   `tag` varchar(256) DEFAULT NULL,
-  PRIMARY KEY (`projID`,`bugID`)
+  `tagID` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`tagID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -136,4 +134,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-04  1:14:15
+-- Dump completed on 2015-07-04 13:18:11
