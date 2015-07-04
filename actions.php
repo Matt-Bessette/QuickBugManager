@@ -43,6 +43,20 @@
 				echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 			break;
 
+			case "project-profile":
+				$stmt = $con->prepare(
+					"SELECT users.name as owner, projects.name, projects.version, projects.submitted
+					FROM projects, users
+					WHERE projects.userID = users.userID AND projects.projID = ?"
+				);
+				$stmt->execute(array($val1));
+				$prof = $stmt->fetch(PDO::FETCH_ASSOC);
+				$stmt = $con->prepare("SELECT moduleID, name FROM modules WHERE projID = ?");
+				$stmt->execute(array($val1));
+				$prof['MODULES'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				echo json_encode($prof);
+			break;
+
 			case "project-bugs":
 				$stmt = $con->prepare(
 					"SELECT bugs.bugID, modules.name as module, users.name as dev, bugs.browser, bugs.type, bugs.status, bugs.submitted
