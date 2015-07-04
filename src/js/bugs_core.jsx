@@ -3,7 +3,7 @@ $(document).ready(function(){
 });
 
 var App = React.createClass({
-	getIntialState : function() {
+	getInitialState : function() {
 		return ({
 			ver : 0,
 			menu_state : "none",
@@ -56,18 +56,22 @@ var App = React.createClass({
 		});
 	},
 	render : function() {
-		var toRender;
+		var toRender = (<div></div>);
 		if(this.state.menu_state === "project")
-			toRender += (<Projects loader={this.PROJECTS_loader} editer={this.PROJECTS_editer} adder={this.PROJECTS_adder} projects={this.state.items} ver={this.state.ver} />);
+			toRender = (<Projects loader={this.PROJECTS_loader} editer={this.PROJECTS_editer} adder={this.PROJECTS_adder} projects={this.state.items} ver={this.state.ver} />);
 		else if(this.state.menu_state === "bugs")
-			toRender += (<Bugs loader={this.BUGS_loader} adder={this.BUGS_adder} bugs={this.state.items} ver={this.state.ver} />);
+			toRender = (<Bugs loader={this.BUGS_loader} adder={this.BUGS_adder} bugs={this.state.items} ver={this.state.ver} />);
 
 		if(this.state.view_state === "project")
 			toRender += (<Project profile={this.state.view_profile} />);
 		else if(this.state.view_state === "bug")
 			toRender += (<Bug profile={this.state.view_profile} />);
 
-		return({toRender});		
+		return(
+			<div>
+				{toRender}
+			</div>
+		);		
 	}
 });
 

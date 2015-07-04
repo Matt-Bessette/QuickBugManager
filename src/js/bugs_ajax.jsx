@@ -21,7 +21,7 @@ var dispatch = {
 	procBug : function(bugID, callback) {
 		var bug_x = $.get("actions.php?action=bug-profile&val1="+bugID);
 		bug_x.done(function(json) {
-			callback.setState({view_rofile : $.parseJSON(json), view_state : "bug", ver : callback.state.ver + 1});
+			callback.setState({view_profile : $.parseJSON(json), view_state : "bug", ver : callback.state.ver + 1});
 		});
 		bug_x.fail(function() {
 			console.log("Error getting bug profile");
