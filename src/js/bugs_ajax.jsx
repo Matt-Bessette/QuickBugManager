@@ -3,7 +3,7 @@ var dispatch = {
 	getProjects : function(callback) {
 		var proj_x = $.get("actions.php?action=all-projects");
 		proj_x.done(function(json) {
-			callback.setState({projects : $.parseJSON(json)});
+			callback.setState({items : $.parseJSON(json), menu_state : "projects", bugs : [], currentProj : null, ver : callback.state.ver + 1});
 		});
 		proj_x.fail(function(){
 			console.log("Error getting projects");
@@ -12,7 +12,7 @@ var dispatch = {
 	getBugs : function(projID, callback) {
 		var bugs_x = $.get("actions.php?action=project-bugs&val1="+projID);
 		bugs_x.done(function(json) {
-			callback.setState({bugs :$.parseJSON(json)});
+			callback.setState({items :$.parseJSON(json), menu_state : "bugs", currentProj : projID, ver : callback.state.ver + 1});
 		});
 		bugs_x.fail(function(){
 			console.log("Error getting bugs");
@@ -21,7 +21,7 @@ var dispatch = {
 	procBug : function(bugID, callback) {
 		var bug_x = $.get("actions.php?action=bug-profile&val1="+bugID);
 		bug_x.done(function(json) {
-			callback.setState({bugProfile : $.parseJSON(json)});
+			callback.setState({view_rofile : $.parseJSON(json), view_state : "bug", ver : callback.state.ver + 1});
 		});
 		bug_x.fail(function() {
 			console.log("Error getting bug profile");
@@ -30,7 +30,7 @@ var dispatch = {
 	procProject : function(projID, callback) {
 		var proj_x = $.get("actions.php?action=project-profile&val1="+projID);
 		proj_x.done(function(json) {
-			callback.setState({projectProfile : $.parseJSON(json)});
+			callback.setState({view_profile : $.parseJSON(json), view_state : "project", ver : callback.state.ver + 1});
 		});
 		proj_x.fail(function() {
 			console.log("Error getting project profile");

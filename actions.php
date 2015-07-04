@@ -71,7 +71,7 @@
 
 			case "bug-profile":
 				$stmt = $con->prepare(
-					"SELECT projects.name, bugs.projID, users.name as owner, bugs.dev, bugs.submitted, bugs.status, bugs.type, bugs.description, bugs.browser, modules.name as module
+					"SELECT bugs.bugID, projects.name as project, bugs.projID, users.name as owner, bugs.dev, bugs.submitted, bugs.status, bugs.type, bugs.description, bugs.browser, modules.name as module
 					FROM bugs
 					INNER JOIN projects ON projects.projID = bugs.projID
 					INNER JOIN modules ON modules.moduleID = bugs.moduleID
