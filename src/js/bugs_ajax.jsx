@@ -27,6 +27,15 @@ var dispatch = {
 			console.log("Error getting bug profile");
 		});
 	},
+	procProject : function(projID, callback) {
+		var proj_x = $.get("actions.php?action=project-profile&val1="+projID);
+		proj_x.done(function(json) {
+			callback.setState({projectProfile : $.parseJSON(json)});
+		});
+		proj_x.fail(function() {
+			console.log("Error getting project profile");
+		});
+	},
 
 	newProject : function(name, version, callback) {
 		var proj_x = $.ajax({
@@ -183,6 +192,71 @@ var dispatch = {
 		});
 		proj_x.fail(function() {
 			console.log("Error updating project");
+		});
+	},
+	editModuleName : function(moduleID, name, callback) {
+		var module_x = $.ajax({
+			type : "POST",
+			url : "acitons.php?edit-module-name&val1="+moduleID,
+			data : {NAME : name}
+		});
+		module_x.done(function() {
+			dispatch.getProjects(callback);
+		});
+		module_x.fail(function() {
+			console.log("Error updating module");
+		});
+	},
+
+	changeState : function(bugID, state, callback) {
+		var stateCode;
+		switch(state) {
+			case "unread": 		stateCode = "unread"; 	break;
+			case "wip": 		stateCode = "wip";		break;
+			case "complete": 	stateCode = "complete";	break;
+			case "scrapped": 	stateCode = "scrapped";	break;
+			case "hold": 		stateCode = "hold";		break;
+			default: 			stateCode = 0;
+		}
+		if(stateCode !== 0) {
+			var state_x = $.ajax({
+				type : "PUT",
+				url : "actions.php?action=bug-state-"+stateCode+"&val1="+bugID,
+			});
+			state_x.done(function() {
+				dispatch.procBug(bugID, callback);
+			});
+			state_x.fail(function() {
+				console.log("Error changing bug state");
+			});
+		}
+	},
+
+	deleteBug : function(bugID, projID, callback) {
+		deleteGeneric("bug", bugID, dispatch.getBugs.bind(null, projID, callback));
+	},
+	deleteComment : function(commentID, bugID, callback) {
+		deleteGeneric("comment", commentID, dispatch.procBug.bind(null, bugID, callback));
+	},
+	deleteModule : function(moduleID, projID, callback) {
+		deleteGeneric("module", moduleID, dispatch.procProject.bind(null, projID, callback));
+	},
+	deleteTag : function(tagID, bugID, callback) {
+		deleteGeneric("tag", tagID, dispatch.procBug.bind(null, bugID, callback))
+	},
+	deleteProject : function(projID, callback) {
+		deleteGeneric("project", projID, dispatch.getProjects.bind(null, callback));
+	},
+	deleteGeneric : function(the, ID, callback) {
+		var gen_x = $.ajax({
+			type : "DELETE",
+			url : "actions.php?action="+the+"&val1="+ID
+		});
+		gen_x.done(function() {
+			callback();
+		});
+		gen_x.fail(function() {
+			console.log("Error deleteing "+the);
 		});
 	}
 };
