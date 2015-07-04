@@ -67,9 +67,9 @@ var App = React.createClass({
 			toRender = (<Bugs loader={this.BUGS_loader} adder={this.BUGS_adder} bugs={this.state.items} ver={this.state.ver} back={this.BUGS_back} />);
 
 		if(this.state.view_state === "project")
-			toView = (<ProjectView profile={this.state.view_profile} />);
+			toView = (<ProjectView profile={this.state.view_profile} ver={this.state.ver} />);
 		else if(this.state.view_state === "bug")
-			toView = (<BugView profile={this.state.view_profile} />);
+			toView = (<BugView profile={this.state.view_profile} ver={this.state.ver} />);
 
 		return(
 			<div>

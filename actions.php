@@ -63,7 +63,8 @@
 					FROM bugs
 					INNER JOIN modules ON modules.moduleID = bugs.moduleID
 					INNER JOIN users ON users.userID = bugs.dev
-					WHERE bugs.projID = ?"
+					WHERE bugs.projID = ?
+					ORDER BY bugs.status ASC"
 				);
 				$stmt->execute(array($val1));
 				echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));

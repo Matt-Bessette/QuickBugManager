@@ -17,14 +17,17 @@ ul {
 	max-height:$menuHeight;
 	position:fixed;
 	max-width:$menuWidth;
+	width:$menuWidth;
+	.bug, .project{
+		cursor:pointer;
+		padding-left: 10px;
+		margin-left:10px;
+		margin-right:10px;
+		margin-bottom:10px;
+	}
 }
 
-.bug, .project{
-	cursor:pointer;
-	padding-left: 15px;
-	margin-left:10px;
-	max-width:100%;
-}
+
 
 .bug {
 	.bugID {
@@ -34,12 +37,20 @@ ul {
 .bug:hover {
 	color:#1EA1DB;
 	border-color:#1EA1DB;
+	border:1px solid;
 }
 
 .bugView, .projectView {
 	left: $menuWidth + 2%;
 	top: 0;
 	position:absolute;
+}
+
+.filter {
+	input {
+		margin-left:15px;
+		margin-top:10px;
+	}
 }
 
 
