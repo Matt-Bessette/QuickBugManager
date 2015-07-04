@@ -158,5 +158,31 @@ var dispatch = {
 		comment_x.fail(function() {
 			console.log("Error updating comment");
 		});
+	},
+	editProjectName : function(projID, name, callback) {
+		var proj_x = $.ajax({
+			type : "POST",
+			url : "actions.php?action=edit-project-name&val1="+projID,
+			data : {NAME : name}
+		});
+		proj_x.done(function() {
+			dispatch.getProjects(callback);
+		});
+		proj_x.fail(function() {
+			console.log("Error updating project");
+		});
+	},
+	editProjectVersion : function(projID, version, callback) {
+		var proj_x = $.ajax({
+			type : "POST",
+			url : "actions.php?action=edit-project-version&val1="+projID,
+			data : {VERSION : version}
+		});
+		proj_x.done(function() {
+			dispatch.getProjects(callback);
+		});
+		proj_x.fail(function() {
+			console.log("Error updating project");
+		});
 	}
 };
