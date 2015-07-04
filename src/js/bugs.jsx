@@ -1,3 +1,6 @@
+$(document).ready(function(){
+	React.render(<App />, document.getElementById('app'));
+});
 var App = React.createClass({
 	getIntialState : function() {
 		return({
