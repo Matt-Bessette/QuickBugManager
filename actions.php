@@ -36,7 +36,8 @@
 				$stmt = $con->prepare(
 					"SELECT projects.projID, users.name as owner, projects.name, projects.version, projects.submitted, projects.locked 
 					FROM projects, users 
-					WHERE projects.userID = users.userID"
+					WHERE projects.userID = users.userID
+					ORDER BY projects.name ASC"
 				);
 				$stmt->execute();
 				echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
@@ -44,39 +45,34 @@
 
 			case "project-bugs":
 				$stmt = $con->prepare(
-					"SELECT bugs.projID, bugs.bugID, modules.name as module, users.name as dev, bugs.browser, bugs.type, bugs.status
+					"SELECT bugs.bugID, modules.name as module, users.name as dev, bugs.browser, bugs.type, bugs.status
 					FROM bugs
 					INNER JOIN modules ON modules.moduleID = bugs.moduleID
-					INNER JOIN users ON users.userID = bugs.dev"
+					INNER JOIN users ON users.userID = bugs.dev
+					WHERE bugs.projID = ?"
 				);
-				$stmt->execute();
+				$stmt->execute(array($val1));
 				echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 			break;
 
 			case "bug-profile":
 				$stmt = $con->prepare(
-					"SELECT project.name, bugs.projID, bugs.bugID, users.name as owner, bugs.dev, bugs.submitted, bugs.status, bugs.type, bugs.description, bugs.browser, modules.name as module
+					"SELECT projects.name, bugs.projID, bugs.bugID, users.name as owner, bugs.dev, bugs.submitted, bugs.status, bugs.type, bugs.description, bugs.browser, modules.name as module
 					FROM bugs
+					INNER JOIN projects ON projects.projID = bugs.projID
 					INNER JOIN modules ON modules.moduleID = bugs.moduleID
 					INNER JOIN users ON users.userID = bugs.owner
 					WHERE AND bugID = ?"
 				);
 				$stmt->execute(array($val1));
-				echo json_encode($stmt->fetch(PDO::FETCH_ASSOC));
-			break;
+				$prof = $stmt->fetch(PDO::FETCH_ASSOC);
 
-			case "bug-tags":
 				$stmt = $con->prepare(
-					"SELECT tag FROM tags WHERE bugID = ?"
+					"SELECT tagID, tag FROM tags WHERE bugID = ?"
 				);
 				$stmt->execute(array($val1));
-				$data = array();
-				foreach($stmt->fetch(PDO::FETCH_ASSOC) as $k=>$v)
-					$data[] = $v['tag'];
-				echo json_encode($data);
-			break;
+				$prof['TAGS'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-			case "comments":
 				$stmt = $con->prepare(
 					"SELECT comments.bugID, comments.projID, comments.commentID, users.name as author, comments.comment, comments.submitted
 					FROM comments
@@ -84,10 +80,12 @@
 					WHERE bugID = ?"
 				);
 				$stmt->execute(array($val1));
-				echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+				$prof['COMMENTS'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+				echo json_encode($prof);
 			break;
 
-			case "modules":
+			case "project-modules":
 				$stmt = $con->prepare(
 					"SELECT name FROM modules WHERE projID = ?"
 				);
@@ -261,16 +259,41 @@
 	function deleteActions($con, $action, $user, $val1) {
 		switch($action) {
 			case "bug":
-
+				$con->beginTransaction();
+				$stmt = $con->prepare("DELETE FROM bugs WHERE bugID = ?");
+				if($stmt->execute(array($val1)) !== true) $con->rollback();
+				$stmt = $con->prepare("DELETE FROM comments WHERE bugID = ?");
+				if($stmt->execute(array($val1)) !== true) $con->rollback();
+				$stmt = $con->prepare("DELETE FROM tags WHERE bugID = ?");
+				if($stmt->execute(array($val1)) !== true) $con->rollback();
+				$con->commit();
+				echo json_encode("ok"=>"bug_deleted");
 			break;
 
 			case "project":
-
+				$stmt = $con->prepare("DELETE FROM projects WHERE projID = ?");
+				$stmt->execute(array($val1));
+				echo json_encode("ok"=>"project_deleted");
 			break;
 
 			case "comment":
-
+				$stmt = $con->prepare("DELETE FROM comments WHERE commentID = ?");
+				$stmt->execute(array($val1));
+				echo json_encode("ok"=>"comment_deleted");
 			break;
+
+			case "tag":
+				$stmt = $con->prepare("DELETE FROM tags WHERE tagID = ?");
+				$stmt->execute(array($val1));
+				echo json_encode("ok"=>"tag_deleted");
+			break;
+
+			case "module":
+				$stmt = $con->prepare("DELETE FROM modules WHERE moduleID = ?");
+				$stmt->execute(array($val1));
+				echo json_encode("ok"=>"module_deleted");
+			break;
+
 			default:
 				header("HTTP/1.1 400", true, 400);
 				echo json_encode(array("error"=>"Action not supported"));
