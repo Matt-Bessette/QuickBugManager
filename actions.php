@@ -87,14 +87,13 @@
 
 			case "project-modules":
 				$stmt = $con->prepare(
-					"SELECT name FROM modules WHERE projID = ?"
+					"SELECT moduleID, name FROM modules WHERE projID = ?"
 				);
 				$stmt->execute(array($val1));
-				$data = array();
-				foreach($stmt->fetch(PDO::FETCH_ASSOC) as $k=>$v)
-					$data[] = $v['name'];
-				echo json_encode($data);
+				echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 			break;
+
+			/*REVIEW, UNKNOWN HOW TO PROCEED*/
 
 			case "tag-bugs":
 				$stmt = $con->prepare(
