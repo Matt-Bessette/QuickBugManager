@@ -1,39 +1,53 @@
 <?php
-	$con = new PDO("mysql:host=localhost;dbname=BUGS", "root", "Apple A Day");
+	session_start();
+	if(isset($_SESSION['userID'])) {
+		$con = new PDO("mysql:host=localhost;dbname=BUGS", "root", "Apple A Day");
 
-	switch($_SERVER['REQUEST_METHOD']) {
-		case "GET":
-			getActions($con, $_GET['action'], $_GET['val1']);
-		break;
-		case "POST":
-			postActions($con, $_GET['action'], $_GET['val1'], $_POST);
-		break;
-		case "PUT":
-			putActions($con, $_GET['action'], $_GET['val1']);
-		break;
-		case "DELETE":
-			deleteActions($con, $_GET['action'], $_GET['val1']);
-		break;
-		default:
-			echo json_encode(array("error"=>"Method not supported"));
+		switch($_SERVER['REQUEST_METHOD']) {
+			case "GET":
+				getActions($con, $_GET['action'], $_GET['val1']);
+			break;
+			case "POST":
+				postActions($con, $_GET['action'], $_GET['val1'], $_POST);
+			break;
+			case "PUT":
+				putActions($con, $_GET['action'], $_GET['val1']);
+			break;
+			case "DELETE":
+				deleteActions($con, $_GET['action'], $_GET['val1']);
+			break;
+			default:
+				echo json_encode(array("error"=>"Method not supported"));
 
+		}
+	} else {
+		echo json_encode(array("error"=>"User must be logged in"));
 	}
 
 	function getActions($con, $action, $val1) {
 		switch($action) {
-			case "all-list":
-				$stmt = $con->prepare("SELECT bugID, browser, bugType, app, submissionTime, state, initials FROM bugs");
+			case "all-projects":
+				$stmt = $con->prepare(
+					"SELECT projects.projID, users.name as owner, projects.name, projects.version, projects.submitted, projects.locked 
+					FROM projects, users 
+					WHERE projects.userID = users.userID"
+				);
 				$stmt->execute();
 				echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 			break;
+
+			case "bugs":
+				$stmt = $con->prepare(
+					"SELECT COALESCE(bugs.projID, '') + '-' + COALESCE(bugs.bugID, '') as ID, modules.name, users.name, bugs.browser, bugs.type, bugs.status
+					FROM bugs, modules, users
+					WHERE bugs.moduleID = modules.moduleID AND bugs.projID = modules.projID AND users.userID = bugs.mod"
+				);
+				$stmt->execute();
+				echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+			break;
+
 			case "single":
-				$stmt = $con->prepare("SELECT * FROM bugs WHERE bugID = ?");
-				$stmt->execute(array($val1));
-				$view = $stmt->fetch(PDO::FETCH_ASSOC);
-				$stmt = $con->prepare("SELECT * FROM comments WHERE bugID = ? ORDER BY submissionTime DESC");
-				$stmt->execute(array($val1));
-				$view['comments'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
-				echo json_encode($view);
+				$val = explode()
 			break;
 			default:
 				echo json_encode(array("error"=>"Action not supported"));
