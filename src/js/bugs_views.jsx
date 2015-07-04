@@ -45,20 +45,19 @@ var Bugs = React.createClass({
 		var bugs = this.props.bugs.map(function(bug, i) {
 			var state;
 			switch(bug.status) {
-				case 1: state = "Unread"; 	break;
-				case 2: state = "WIP";		break;
-				case 3: state = "Complete";	break;
-				case 4: state = "Scrapped";	break;
-				case 5: state = "OnHold";	break;
+				case "1": state = "Unread"; 	break;
+				case "2": state = "WIP";		break;
+				case "3": state = "Complete";	break;
+				case "4": state = "Scrapped";	break;
+				case "5": state = "OnHold";	break;
 				default: state = "Unread";
 			}
 			return (
-				<li className={"bug "+state} key={ctx.props.ver+".b."+i}>
+				<li className={"bug "+state} key={ctx.props.ver+".b."+i} onClick={ctx.props.loader.bind(null, bug.bugID)}>
 					<span className="bugID">Bug #{bug.ID}</span>
 					<span className="module">Module: {bug.module}</span>
 					<span className="browser">Browser: {bug.browser}</span>
 					<span className="type">Type: {bug.type}</span>
-					<button className="button-loader" onClick={ctx.props.loader.bind(null, bug.bugID)}>Load</button>
 				</li>
 			);
 		});

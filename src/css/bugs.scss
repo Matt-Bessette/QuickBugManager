@@ -1,3 +1,6 @@
+$menuWidth : 23%;
+$menuHeight : 100%;
+
 ul {
 	list-style-type: none;
 	overflow-y:auto;
@@ -9,12 +12,21 @@ ul {
 	font-family: "Times New Roman", Times, serif;
 	width: 85%;
 }
-.bugObject2{
+.bug, .project{
 	cursor:pointer;
 	padding: 5px;
 	padding: 3px;
+	max-width:$menuWidth;
+	width:$menuWidth;
+	max-height:$menuHeight;
 }
-.bugObject:hover {
+
+.bug {
+	.bugID {
+		text-align: center;
+	}
+}
+.bug:hover {
 	color:#1EA1DB;
 	border-color:#1EA1DB;
 }
@@ -43,17 +55,21 @@ ul {
 	overflow-y:auto;
 	height: 100%;
 }
-.state-unread {
+
+.Unread {
 
 }
-.state-wip {
+.WIP {
 	background-color:#FAEBCC;
 }
-.state-complete {
+.Complete {
 	background-color:#D6E9C6;
 }
-.state-scrapped {
+.Scrapped {
 	background-color:#F2DEDE;
+}
+.OnHold {
+	background-color:#9370DB;
 }
 .pad {
 	padding-top : 5px;
