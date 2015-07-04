@@ -66,5 +66,97 @@ var dispatch = {
 		comment_x.fail(function() {
 			console.log("Error creating comment");
 		});
+	},
+	newModule : function(projID, name, callback) {
+		var module_x = $.ajax({
+			type : "POST",
+			url : "actions.php?action=new-module&val1="+projID,
+			data : {NAME : name}
+		});
+		module_x.done(function() {
+			dispatch.getProjects(callback);
+		});
+		module_x.fail(function() {
+			console.log("Error creating module");
+		});
+	},
+	newTag : function(bugID, name, callback) {
+		var tag_x = $.ajax({
+			type : "POST",
+			url : "actions.php?action=new-tag&val1="+bugID,
+			data : {NAME : name}
+		});
+		tag_x.done(function() {
+			dispatch.procBug(bugID, callback);
+		});
+		tag_x.fail(function() {
+			console.log("Error creating tag");
+		});
+	},
+
+	editBugDescription : function(bugID, description, callback) {
+		var bug_x = $.ajax({
+			type : "POST",
+			url : "actions.php?action=edit-bug-description&val1="+bugID,
+			data : {DESCRIPTION : description}
+		});
+		bug_x.done(function() {
+			dispatch.procBug(bugID, callback);
+		});
+		bug_x.fail(function() {
+			console.log("Error updating bug");
+		});
+	},
+	editBugDev : function(bugID, dev, callback) {
+		var bug_x = $.ajax({
+			type : "POST",
+			url : "actions.php?action=edit-bug-dev&val1="+bugID,
+			data : {DESCRIPTION : description}
+		});
+		bug_x.done(function() {
+			dispatch.procBug(bugID, callback);
+		});
+		bug_x.fail(function() {
+			console.log("Error updating bug");
+		});
+	},
+	editBugBrowser : function(bugID, browser, callback) {
+		var bug_x = $.ajax({
+			type : "POST",
+			url : "actions.php?action=edit-bug-browser&val1="+bugID,
+			data : {BROWSER : browser}
+		});
+		bug_x.done(function() {
+			dispatch.procBug(bugID, callback);
+		});
+		bug_x.fail(function() {
+			console.log("Error updating bug");
+		});
+	},
+	editBugType : function(bugID, type, callback) {
+		var bug_x = $.ajax({
+			type : "POST",
+			url : "actions.php?action=edit-bug-type&val1="+bugID,
+			data : {type : type}
+		});
+		bug_x.done(function() {
+			dispatch.procBug(bugID, callback);
+		});
+		bug_x.fail(function() {
+			console.log("Error updating bug");
+		});
+	},
+	editCommentDescription : function(commentID, description, bugID, callback) {
+		var comment_x = $.ajax({
+			type : "POST",
+			url : "actions.php?action=edit-comment-description&val1="+commentID,
+			data : {DESCRIPTION : description}
+		});
+		comment_x.done(function() {
+			dispatch.procBug(bugID, callback);
+		});
+		comment_x.fail(function() {
+			console.log("Error updating comment");
+		});
 	}
 };
