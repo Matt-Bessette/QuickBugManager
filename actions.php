@@ -1,21 +1,21 @@
 <?php
-	session_start();
-	if(isset($_SESSION['userID'])) {
+	//session_start();
+	if(true) {
 		$con = new PDO("mysql:host=localhost;dbname=BUGS", "root", "Apple A Day");
 
 		try {
 			switch($_SERVER['REQUEST_METHOD']) {
 				case "GET":
-					getActions($con, $_GET['action'], $_GET['val1'], $_SESSION['userID']));
+					getActions($con, $_GET['action'], $_GET['val1'], 1);
 				break;
 				case "POST":
-					postActions($con, $_GET['action'], $_GET['val1'], $_SESSION['userID']) $_POST);
+					postActions($con, $_GET['action'], $_GET['val1'], 1, $_POST);
 				break;
 				case "PUT":
-					putActions($con, $_GET['action'], $_GET['val1'], $_SESSION['userID']));
+					putActions($con, $_GET['action'], $_GET['val1'], 1);
 				break;
 				case "DELETE":
-					deleteActions($con, $_GET['action'], $_GET['val1'], $_SESSION['userID']));
+					deleteActions($con, $_GET['action'], $_GET['val1'], 1);
 				break;
 				default:
 					echo json_encode(array("error"=>"Method not supported"));
@@ -34,7 +34,7 @@
 		switch($action) {
 			case "all-projects":
 				$stmt = $con->prepare(
-					"SELECT projects.projID, users.name as owner, projects.name, projects.version, projects.submitted, projects.locked 
+					"SELECT projects.projID, users.name as owner, projects.name, projects.version, projects.submitted 
 					FROM projects, users 
 					WHERE projects.userID = users.userID
 					ORDER BY projects.name ASC"
@@ -45,7 +45,7 @@
 
 			case "project-bugs":
 				$stmt = $con->prepare(
-					"SELECT bugs.bugID, modules.name as module, users.name as dev, bugs.browser, bugs.type, bugs.status
+					"SELECT bugs.bugID, modules.name as module, users.name as dev, bugs.browser, bugs.type, bugs.status, bugs.submitted
 					FROM bugs
 					INNER JOIN modules ON modules.moduleID = bugs.moduleID
 					INNER JOIN users ON users.userID = bugs.dev
@@ -61,8 +61,8 @@
 					FROM bugs
 					INNER JOIN projects ON projects.projID = bugs.projID
 					INNER JOIN modules ON modules.moduleID = bugs.moduleID
-					INNER JOIN users ON users.userID = bugs.owner
-					WHERE AND bugID = ?"
+					INNER JOIN users ON users.userID = bugs.maker
+					WHERE bugs.bugID = ?"
 				);
 				$stmt->execute(array($val1));
 				$prof = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -74,10 +74,10 @@
 				$prof['TAGS'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 				$stmt = $con->prepare(
-					"SELECT comments.bugID, comments.projID, comments.commentID, users.name as author, comments.comment, comments.submitted
+					"SELECT comments.commentID, users.name as author, comments.comment, comments.submitted
 					FROM comments
 					INNER JOIN users ON users.userID = comments.userID
-					WHERE bugID = ?"
+					WHERE comments.bugID = ?"
 				);
 				$stmt->execute(array($val1));
 				$prof['COMMENTS'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -267,31 +267,31 @@
 				$stmt = $con->prepare("DELETE FROM tags WHERE bugID = ?");
 				if($stmt->execute(array($val1)) !== true) $con->rollback();
 				$con->commit();
-				echo json_encode("ok"=>"bug_deleted");
+				echo json_encode(array("ok"=>"bug_deleted"));
 			break;
 
 			case "project":
 				$stmt = $con->prepare("DELETE FROM projects WHERE projID = ?");
 				$stmt->execute(array($val1));
-				echo json_encode("ok"=>"project_deleted");
+				echo json_encode(array("ok"=>"project_deleted"));
 			break;
 
 			case "comment":
 				$stmt = $con->prepare("DELETE FROM comments WHERE commentID = ?");
 				$stmt->execute(array($val1));
-				echo json_encode("ok"=>"comment_deleted");
+				echo json_encode(array("ok"=>"comment_deleted"));
 			break;
 
 			case "tag":
 				$stmt = $con->prepare("DELETE FROM tags WHERE tagID = ?");
 				$stmt->execute(array($val1));
-				echo json_encode("ok"=>"tag_deleted");
+				echo json_encode(array("ok"=>"tag_deleted"));
 			break;
 
 			case "module":
 				$stmt = $con->prepare("DELETE FROM modules WHERE moduleID = ?");
 				$stmt->execute(array($val1));
-				echo json_encode("ok"=>"module_deleted");
+				echo json_encode(array("ok"=>"module_deleted"));
 			break;
 
 			default:
