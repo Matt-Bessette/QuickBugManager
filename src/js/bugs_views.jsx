@@ -129,7 +129,23 @@ var BugView = React.createClass({
 
 			default: status = "Unread";
 		}
-		var comments = this.props.profile.comments
+		var comments = this.props.profile.COMMENTS.map(function(comment, i) {
+			return (
+				<div className="comment">
+					{comment.submitted} - {comment.author}<br/>
+					<p>{comment.comment}</p>
+				</div>
+			);
+		});
+
+		var tags = this.props.profile.TAGS.map(function(tag, i) {
+			return (
+				<div className="tag">
+					{tag}
+				</div>
+			);
+		});
+
 		return (
 			<div className="bugView">
 				<div className="row">
@@ -161,19 +177,21 @@ var BugView = React.createClass({
 				<div className="row">
 					<div className="six columns">
 						<h4>Description</h4>
-						<p className="description toTextArea">{this.props.profile.description}</p>
+						<span id="descBox">
+							<p className="description toTextArea">{this.props.profile.description}</p>
+						</span>
 					</div>
 					<div className="six columns">
 						<h4>Comments</h4>
 						<div className="commentHolder">
-
+							{comments}
 						</div>
 					</div>
 				</div>
 				<div className="row">
 					<div className="six columns">
 						<h4>Tags</h4>
-				
+						
 					</div>
 					<div className="six columns">
 						

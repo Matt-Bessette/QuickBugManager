@@ -71,6 +71,18 @@ ul {
 		margin-top:10px;
 	}
 }
+$commentMargin : 15px;
+.commentHolder {
+	.comment {
+		box-shadow : 0 4px 10px #777;
+		margin-top:$commentMargin;
+		margin-bottom: $commentMargin;
+		padding:3px;
+	}
+	max-height:30%;
+	overflow-y:auto;
+}
+
 
 
 
@@ -101,9 +113,7 @@ ul {
 .styling{
 	border-bottom: 1px solid black;
 }
-.comment {
-	box-shadow : 0 4px 10px #777;
-}
+
 .view {
 	overflow-y:auto;
 	height: 100%;

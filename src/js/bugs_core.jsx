@@ -58,7 +58,7 @@ var App = React.createClass({
 		if(this.state.view_state === "project")
 			toView = (<div className="container"><ProjectView profile={this.state.view_profile} /></div>);
 		else if(this.state.view_state === "bug")
-			toView = (<div className="container"><BugView profile={this.state.view_profile} changeState={this.BUGS_changeState} /></div>);
+			toView = (<div className="container"><BugView profile={this.state.view_profile} changeState={this.BUGS_changeState} callback={this} /></div>);
 
 		return(
 			<div>
