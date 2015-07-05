@@ -215,7 +215,7 @@ var dispatch = {
 			case "wip": 		stateCode = "wip";		break;
 			case "complete": 	stateCode = "complete";	break;
 			case "scrapped": 	stateCode = "scrapped";	break;
-			case "hold": 		stateCode = "hold";		break;
+			case "onhold": 		stateCode = "hold";		break;
 			default: 			stateCode = 0;
 		}
 		if(stateCode !== 0) {

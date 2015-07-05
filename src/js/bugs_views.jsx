@@ -11,7 +11,7 @@ var Projects = React.createClass({
 		var ctx = this;
 		var projects = this.props.projects.map(function(project, i) {
 			return (
-				<li className="project" key={ctx.props.ver+".p."+i}>
+				<li className="project">
 					<span className="name">{project.name}</span><br/>
 					<span className="version">Version: {project.version}</span><br/>
 					<span className="owner">By: {project.owner}</span><br/>
@@ -70,7 +70,7 @@ var Bugs = React.createClass({
 					default: state = "Unread";
 				}
 				return (
-					<li className={"bug "+state} key={ctx.props.ver+".b."+i} onClick={ctx.props.loader.bind(null, bug.bugID)}>
+					<li className={"bug "+state} onClick={ctx.props.loader.bind(null, bug.bugID)}>
 						<span className="bugID">Bug #{bug.bugID}</span><br/>
 						<span className="module">Module: {bug.module}</span><br/>
 						<span className="browser">Browser: {bug.browser}</span><br/>
@@ -119,25 +119,9 @@ var ProjectView = React.createClass({
 });
 
 var BugView = React.createClass({
-	getInitialState : function() {
-		return({
-			bugID : this.props.profile.bugID,
-			project : this.props.profile.project,
-			owner : this.props.profile.owner,
-			projID : this.props.profile.projID,
-			submitted : this.props.profile.submitted,
-			description : this.props.profile.description,
-			status : this.props.profile.status,
-			type : this.props.profile.type,
-			browser : this.props.profile.browser,
-			module : this.props.profile.module,
-			TAGS : this.props.profile.TAGS,
-			COMMENTS : this.props.profile.COMMENTS
-		});
-	},
 	render : function() {
 		var status;
-		switch(this.state.status) {
+		switch(this.props.profile.status) {
 			case "1": status = "WIP"; 		break;
 			case "2": status = "Unread";	break;
 			case "3": status = "OnHold";	break;
@@ -150,24 +134,24 @@ var BugView = React.createClass({
 			<div className="bugView">
 				<div className="row">
 					<div className="six columns">
-						<span className="bugID" key={this.props.ver+".bv.1"}>Bug # {this.state.bugID}</span><span className="status" key={this.props.ver+".bv.2"}> - {status}</span><br/>
-						<span className="project-name" key={this.props.ver+".bv.3"}>Project: {this.state.project}</span><br/>
-						<span className="owner" key={this.props.ver+".bv.4"}>Owner: {this.state.owner}</span><br/>
-						<span className="bug-type toSelectionType" key={this.props.ver+".bv.5"}>Type: {this.state.type}</span><br/>
-						<span className="browser toSelectionBrowser" key={this.props.ver+".bv.6"}>Browser: {this.state.browser}</span><br/>
-						<span className="browser toSelectionModule" key={this.props.ver+".bv.7"}>Module: {this.state.module}</span><br/>
-						<span className="submitted" key={this.props.ver+".bv.8"}>Submitted: {this.state.submitted}</span>
+						<span className="bugID">Bug # {this.props.profile.bugID}</span><span className="status"> - {status}</span><br/>
+						<span className="project-name">Project: {this.props.profile.project}</span><br/>
+						<span className="owner">Owner: {this.props.profile.owner}</span><br/>
+						<span className="bug-type toSelectionType">Type: {this.props.profile.type}</span><br/>
+						<span className="browser toSelectionBrowser">Browser: {this.props.profile.browser}</span><br/>
+						<span className="browser toSelectionModule">Module: {this.props.profile.module}</span><br/>
+						<span className="submitted">Submitted: {this.props.profile.submitted}</span>
 					</div>
 					<div className="six columns">
-						<button className="Unread u-full-width" onClick={this.props.changeState.bind(null, this.state.bugID, "unread")}>Unread</button>
-						<button className="WIP u-full-width" onClick={this.props.changeState.bind(null, this.state.bugID, "wip")}>WIP</button>
-						<button className="Complete u-full-width" onClick={this.props.changeState.bind(null, this.state.bugID, "complete")}>Complete</button>
-						<button className="Scrapped u-full-width" onClick={this.props.changeState.bind(null, this.state.bugID, "scrapped")}>Scrapped</button>
-						<button className="OnHold u-full-width" onClick={this.props.changeState.bind(null, this.state.bugID, "onhold")}>Hold</button>
+						<button className="Unread u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "unread")}>Unread</button>
+						<button className="WIP u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "wip")}>WIP</button>
+						<button className="Complete u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "complete")}>Complete</button>
+						<button className="Scrapped u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "scrapped")}>Scrapped</button>
+						<button className="OnHold u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "onhold")}>Hold</button>
 					</div>
 				</div>
 				<h4>Description</h4>
-				<p className="description toTextArea" key={this.props.ver+".bv.9"}>{this.state.description}</p>
+				<p className="description toTextArea">{this.props.profile.description}</p>
 			</div>
 		);
 	}
