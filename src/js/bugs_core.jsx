@@ -58,6 +58,9 @@ var App = React.createClass({
 	BUGS_back : function() {
 		dispatch.getProjects(this);
 	},
+	BUGS_changeState : function(bugID, status) {
+		dispatch.changeState(bugID, status, this);
+	},
 	render : function() {
 		console.log(this.state);
 		var toRender, toView;
@@ -67,9 +70,9 @@ var App = React.createClass({
 			toRender = (<Bugs loader={this.BUGS_loader} adder={this.BUGS_adder} bugs={this.state.items} ver={this.state.ver} back={this.BUGS_back} />);
 
 		if(this.state.view_state === "project")
-			toView = (<ProjectView profile={this.state.view_profile} ver={this.state.ver} />);
+			toView = (<div className="container"><ProjectView profile={this.state.view_profile} ver={this.state.ver} /></div>);
 		else if(this.state.view_state === "bug")
-			toView = (<BugView profile={this.state.view_profile} ver={this.state.ver} />);
+			toView = (<div className="container"><BugView profile={this.state.view_profile} ver={this.state.ver} changeState={this.BUGS_changeState} /></div>);
 
 		return(
 			<div>

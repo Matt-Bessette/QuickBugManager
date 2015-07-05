@@ -240,27 +240,27 @@
 	function putActions($con, $action, $user, $val1) {
 		switch($action) {
 			case "bug-state-unread":	// 1
-				$stmt = $con->prepare("UPDATE bugs SET state = 1 WHERE bugID = ?");
+				$stmt = $con->prepare("UPDATE bugs SET state = '2' WHERE bugID = ?");
 				$stmt->execute(array($val1));
 				echo json_encode(array("ok"=>"bug_updated"));
 			break;
 			case "bug-state-wip":		// 2
-				$stmt = $con->prepare("UPDATE bugs SET state = 2 WHERE bugID = ?");
+				$stmt = $con->prepare("UPDATE bugs SET state = '1' WHERE bugID = ?");
 				$stmt->execute(array($val1));
 				echo json_encode(array("ok"=>"bug_updated"));
 			break;
 			case "bug-state-scrapped":	// 4
-				$stmt = $con->prepare("UPDATE bugs SET state = 4 WHERE bugID = ?");
+				$stmt = $con->prepare("UPDATE bugs SET state = '5' WHERE bugID = ?");
 				$stmt->execute(array($val1));
 				echo json_encode(array("ok"=>"bug_updated"));
 			break;
 			case "bug-state-complete":	// 3
-				$stmt = $con->prepare("UPDATE bugs SET state = 3 WHERE bugID = ?");
+				$stmt = $con->prepare("UPDATE bugs SET state = '4' WHERE bugID = ?");
 				$stmt->execute(array($val1));
 				echo json_encode(array("ok"=>"bug_updated"));
 			break;
 			case "bug-state-hold":		// 5
-				$stmt = $con->prepare("UPDATE bugs SET state = 5 WHERE bugID = ?");
+				$stmt = $con->prepare("UPDATE bugs SET state = '3' WHERE bugID = ?");
 				$stmt->execute(array($val1));
 				echo json_encode(array("ok"=>"bug_updated"));
 			break;
