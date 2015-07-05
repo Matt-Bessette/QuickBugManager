@@ -38,22 +38,7 @@ var App = React.createClass({
 		dispatch.procBug(bugID, this);
 	},
 	BUGS_adder : function() {
-		this.setState({
-			view_state : "bug",
-			view_profile : {
-				project : "",
-				owner : "you",
-				projID : this.state.currentProj,
-				submitted : "TBD",
-				status : 1,
-				type : "cosmetic",
-				description : "",
-				browser : "Google Chrome",
-				module : "none",
-				TAGS : [],
-				COMMENTS : []
-			}
-		});
+		dispatch.newBug(this.state.currentProj, "", "any", "cosmetic", this);
 	},
 	BUGS_back : function() {
 		dispatch.getProjects(this);

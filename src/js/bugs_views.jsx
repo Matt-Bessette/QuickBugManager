@@ -45,7 +45,6 @@ var Bugs = React.createClass({
 			- back - func
 	*/
 	render : function() {
-		console.log(this.state.filter)
 		var ctx = this;
 		var filters = this.state.filter.split(",");
 		var bugs = this.props.bugs.map(function(bug, i) {
@@ -130,17 +129,26 @@ var BugView = React.createClass({
 
 			default: status = "Unread";
 		}
+		var comments = this.props.profile.comments
 		return (
 			<div className="bugView">
 				<div className="row">
 					<div className="six columns">
-						<span className="bugID">Bug # {this.props.profile.bugID}</span><span className="status"> - {status}</span><br/>
-						<span className="project-name">Project: {this.props.profile.project}</span><br/>
-						<span className="owner">Owner: {this.props.profile.owner}</span><br/>
-						<span className="bug-type toSelectionType">Type: {this.props.profile.type}</span><br/>
-						<span className="browser toSelectionBrowser">Browser: {this.props.profile.browser}</span><br/>
-						<span className="browser toSelectionModule">Module: {this.props.profile.module}</span><br/>
-						<span className="submitted">Submitted: {this.props.profile.submitted}</span>
+						<span className="bugID">Bug # {this.props.profile.bugID}</span><span className="status"> - {status}</span>
+						<div className="row">
+							<div className="six columns">
+								<span className="project-name">Project: {this.props.profile.project}</span><br/>
+								<span className="owner">Owner: {this.props.profile.owner}</span><br/>
+								<span className="submitted">Submitted: {this.props.profile.submitted}</span>
+							</div>
+							<div className="six columns">
+								<span className="bug-type">Type: <span className="toSelectionType">{this.props.profile.type}</span></span><br/>
+								<span className="browser">Browser: <span className="toSelectionBrowser">{this.props.profile.browser}</span></span><br/>
+								<span className="module">Module: <span className="toSelectionModule">{this.props.profile.module}</span></span><br/>
+								<span className="dev">Dev: <span className="toSelectionDev">{this.props.profile.dev}</span></span>
+							</div>
+						</div>
+						<hr />
 					</div>
 					<div className="six columns">
 						<button className="Unread u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "unread")}>Unread</button>
@@ -150,8 +158,27 @@ var BugView = React.createClass({
 						<button className="OnHold u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "onhold")}>Hold</button>
 					</div>
 				</div>
-				<h4>Description</h4>
-				<p className="description toTextArea">{this.props.profile.description}</p>
+				<div className="row">
+					<div className="six columns">
+						<h4>Description</h4>
+						<p className="description toTextArea">{this.props.profile.description}</p>
+					</div>
+					<div className="six columns">
+						<h4>Comments</h4>
+						<div className="commentHolder">
+
+						</div>
+					</div>
+				</div>
+				<div className="row">
+					<div className="six columns">
+						<h4>Tags</h4>
+				
+					</div>
+					<div className="six columns">
+						
+					</div>
+				</div>
 			</div>
 		);
 	}

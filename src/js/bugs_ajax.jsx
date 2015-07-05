@@ -56,7 +56,9 @@ var dispatch = {
 			url : "actions.php?action=new-bug&val1="+projID,
 			data : {DESCRIPTION : description, BROWSER : browser, TYPE : type}
 		});
-		bug_x.done(function() {
+		bug_x.done(function(json) {
+			var id = $.parseJSON(json);
+			dispatch.procBug(id.id, callback);
 			dispatch.getBugs(projID, callback);
 		});
 		bug_x.fail(function() {
