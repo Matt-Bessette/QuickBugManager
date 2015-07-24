@@ -1,6 +1,7 @@
 <?php	session_start(); if(!isset($_SESSION['USER_ID'], $_SESSION['USERNAME'])) header("Location: index.php"); ?>
 <html>
 	<head>
+		<meta charset="UTF-8"> 
 		<link rel="stylesheet" type="text/css" href="lib/css/normalize.css">
 		<link rel="stylesheet" type="text/css" href="lib/css/skeleton.css">
 		<link rel="stylesheet" type="text/css" href="bin/css/bugs.css">

@@ -156,68 +156,70 @@ var BugView = React.createClass({
 
 		var tags = this.props.profile.TAGS.map(function(tag, i) {
 			return (
-				<div className="tag">
-					{tag}
-				</div>
+				<span className={"tag "+tag.color}>
+					<span className="in-tag">{tag.tag}</span>
+					<span><i className="fa fa-times fa-fw"></i></span>
+				</span>
 			);
 		});
 
 		return (
 			<div className="bugView">
 				<div className="row">
-					<div className="nine columns">
-						<span className="bugID">Bug # {this.props.profile.bugID}</span><span className="status"> - {status}</span>
-						<div className="row">
-							<div className="six columns">
-								<span className="project-name">Project: {this.props.profile.project}</span><br/>
-								<span className="owner">Owner: {this.props.profile.owner}</span><br/>
-								<span className="submitted">Submitted: {this.props.profile.submitted}</span>
-							</div>
-							<div className="six columns">
-								<span className="bug-type">Type: <span className="toSelectionType">{this.props.profile.type}</span></span><br/>
-								<span className="browser">Browser: <span className="toSelectionBrowser">{this.props.profile.browser}</span></span><br/>
-								<span className="module">Module: <span className="toSelectionModule">{this.props.profile.module}</span></span><br/>
-								<span className="dev">Dev: <span className="toSelectionDev">{this.props.profile.dev}</span></span>
-							</div>
-						</div>
-						<hr />
+					<div className="four columns">
+						<h5>Bug # {this.props.profile.bugID}</h5>
 					</div>
-					<div className="three columns">
-						<div className="row">
-							<div className="six columns">
-								<button className="Unread u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "unread")}>Unread</button>
-								<button className="WIP u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "wip")}>WIP</button>
-								<button className="Complete u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "complete")}>Complete</button>
-							</div>
-							<div className="six columns">
-								<button className="Scrapped u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "scrapped")}>Scrapped</button>
-								<button className="OnHold u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "onhold")}>Hold</button>
-							</div>
-						</div>
+					<div className="four columns">
+						<h5>{this.props.profile.project}</h5>
+					</div>
+					<div className="four columns">
+						<select name="status" defaultValue={status}>
+							<option value="Unread">Unread</option>
+							<option value="WIP">WIP</option>
+							<option value="Completed">Completed</option>
+							<option value="Scraped">Scraped</option>
+							<option value="OnHold">OnHold</option>
+						</select>
 					</div>
 				</div>
 				<div className="row">
-					<div className="six columns">
-						<h4>Description</h4>
-						<span id="descBox">
-							<p className="description toTextArea">{this.props.profile.description}</p>
-						</span>
+					<div className="eight columns">
+						<p>Submitted on {this.props.profile.submitted} by {this.props.profile.owner}</p>
 					</div>
-					<div className="six columns">
-						<h4>Comments</h4>
-						<div className="commentHolder">
-							{comments}
-						</div>
+				</div>
+				<hr />
+				<div className="row">
+					{tags}
+				</div>
+				<hr />
+				<div className="row">
+					<div className="five columns">
+						<table>
+							<tr>
+								<td>TYPE</td>
+								<td>{this.props.profile.type}</td>
+							</tr>
+							<tr>
+								<td>MODULE</td>
+								<td>{this.props.profile.module}</td>
+							</tr>
+							<tr>
+								<td>DEV</td>
+								<td>{this.props.profile.dev}</td>
+							</tr>
+							<tr>
+								<td>BROWSER</td>
+								<td>{this.props.profile.browser}</td>
+							</tr>
+						</table>
+					</div>
+					<div className="seven columns">
+						<h5>Description</h5>
+						<p>{this.props.profile.description}</p>
 					</div>
 				</div>
 				<div className="row">
-					<div className="six columns">
-						<h4>Tags</h4>
-						
-					</div>
-					<div className="six columns">
-						
-					</div>
+					<h5>Comments</h5>
 				</div>
 			</div>
 		);

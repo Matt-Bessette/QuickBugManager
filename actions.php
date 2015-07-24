@@ -84,7 +84,7 @@
 				$prof = $stmt->fetch(PDO::FETCH_ASSOC);
 
 				$stmt = $con->prepare(
-					"SELECT tagID, tag FROM tags WHERE bugID = ?"
+					"SELECT tagID, tag, color FROM tags WHERE bugID = ?"
 				);
 				$stmt->execute(array($val1));
 				$prof['TAGS'] = $stmt->fetchAll(PDO::FETCH_ASSOC);

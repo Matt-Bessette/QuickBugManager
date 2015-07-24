@@ -1,5 +1,5 @@
 <?php
-	session_start(); if(!isset($_SESSION['USER_ID'], $_SESSION['USERNAME'])) header("Location: index.php");
+	//session_start(); if(!isset($_SESSION['USER_ID'], $_SESSION['USERNAME'])) header("Location: index.php");
 	
 	if(isset($_POST['name'], $_POST['email'], $_POST['passw'], $_POST['cpassw'])) {
 		if($_POST['passw'] === $_POST['cpassw']) {
