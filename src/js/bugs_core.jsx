@@ -17,6 +17,7 @@ var App = React.createClass({
 		dispatch.getProjects(this);
 	},
 	PROJECTS_loader : function(projID) {
+		console.log("Getting bugs");
 		dispatch.getBugs(projID, this);
 	},
 	PROJECTS_editer : function(projID) {
@@ -47,6 +48,9 @@ var App = React.createClass({
 		dispatch.changeState(bugID, status, this);
 		dispatch.getBugs(this.state.currentProj, this);
 	},
+	NEWPROJECT_addProject : function() {
+		dispatch.newProject($("#name").val(), $("#version").val(), this);
+	},
 	render : function() {
 		console.log(this.state);
 		var toRender, toView;
@@ -58,7 +62,9 @@ var App = React.createClass({
 		if(this.state.view_state === "project")
 			toView = (<div className="container"><ProjectView profile={this.state.view_profile} /></div>);
 		else if(this.state.view_state === "bug")
-			toView = (<div className="container"><BugView profile={this.state.view_profile} changeState={this.BUGS_changeState} callback={this} /></div>);
+			toView = (<div className="container"><BugView profile={this.state.view_profile} changeState={this.BUGS_changeState} /></div>);
+		else if(this.state.view_state === "new_project")
+			toView = (<div className="container"><NewProject addProject={this.NEWPROJECT_addProject} /></div>);
 
 		return(
 			<div>
@@ -68,4 +74,3 @@ var App = React.createClass({
 		);		
 	}
 });
-

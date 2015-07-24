@@ -1,21 +1,22 @@
 <?php
-	//session_start();
-	if(true) {
+	session_start();
+	if(isset($_SESSION['USER_ID'], $_SESSION['USERNAME']) || $_GET['action'] === "login") {
+
 		$con = new PDO("mysql:host=localhost;dbname=BUGS", "root", "Apple A Day");
 
 		try {
 			switch($_SERVER['REQUEST_METHOD']) {
 				case "GET":
-					getActions($con, $_GET['action'], $_GET['val1'], 1);
+					getActions($con, $_GET['action'], $_GET['val1'], $_SESSION['USER_ID']);
 				break;
 				case "POST":
-					postActions($con, $_GET['action'], $_GET['val1'], 1, $_POST);
+					postActions($con, $_GET['action'], $_GET['val1'], $_SESSION['USER_ID'], $_POST);
 				break;
 				case "PUT":
-					putActions($con, $_GET['action'], $_GET['val1'], 1);
+					putActions($con, $_GET['action'], $_GET['val1'], $_SESSION['USER_ID']);
 				break;
 				case "DELETE":
-					deleteActions($con, $_GET['action'], $_GET['val1'], 1);
+					deleteActions($con, $_GET['action'], $_GET['val1'], $_SESSION['USER_ID']);
 				break;
 				default:
 					echo json_encode(array("error"=>"Method not supported"));
@@ -125,6 +126,10 @@
 				);
 				$stmt->execute(array("%".$val."%"));
 				echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+			break;
+
+			case "user-profile":
+				echo json_encode(array("USER_ID"=>$_SESSION['USER_ID'], "USERNAME"=>$_SESSION['USERNAME']));
 			break;
 			default:
 				header("HTTP/1.1 400", true, 400);

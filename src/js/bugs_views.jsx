@@ -46,14 +46,16 @@ var Bugs = React.createClass({
 	*/
 	render : function() {
 		var ctx = this;
-		var filters = this.state.filter.split(",");
+		var filters = this.state.filter.split(" ");
+		console.log("Before map");
 		var bugs = this.props.bugs.map(function(bug, i) {
 
 			var valid = true;
 
 			$.each(filters, function(k, filter) {
 				var set = filter.split(":");
-				if(bug[set[0]] !== set[1]) {
+				var reg = new RegExp(set[1]);
+				if(!reg.test(bug[set[0]])) {
 					valid = false;
 					return false;
 				}
@@ -78,6 +80,7 @@ var Bugs = React.createClass({
 				);
 			}
 		});
+		console.log("After map");
 		return (
 			<ul className="left-menu">
 				<li className="filter">
@@ -95,23 +98,36 @@ var Bugs = React.createClass({
 	}
 });
 
+var NewProject = React.createClass({
+	render : function() {
+
+		return (
+			<div className="projectView">
+				<span className="name">Name: 
+					<input type="text" id="name" placeholder="Project Name" />
+				</span>
+				<br/>
+
+				<span className="owner">Owner: {this.props.user.name}</span><br/>
+				<span className="version toInput">Version: 
+					<input type="text" id="name" placeholder="Project Name" />
+				</span>
+				<br/>
+
+				<span className="submitted">Submitted: now</span>
+			</div>
+		);
+	}
+});
+
 var ProjectView = React.createClass({
-	getInitialState : function() {
-		return ({
-			name : this.props.profile.name,
-			owner : this.props.profile.owner,
-			version : this.props.profile.version,
-			submitted : this.props.profile.submitted,
-			MODULES : this.props.profile.modules
-		});
-	},
 	render : function() {
 		return(
 			<div className="projectView">
-				<span className="name toInput">Name: {this.state.name}</span><br/>
-				<span className="owner">Owner: {this.state.owner}</span><br/>
-				<span className="version toInput">Version: {this.state.version}</span><br/>
-				<span className="submitted">Submitted: {this.state.submitted}</span>
+				<span className="name toInput">Name: {this.props.name}</span><br/>
+				<span className="owner">Owner: {this.props.owner}</span><br/>
+				<span className="version toInput">Version: {this.props.version}</span><br/>
+				<span className="submitted">Submitted: {this.props.submitted}</span>
 			</div>
 		);
 	}
@@ -149,7 +165,7 @@ var BugView = React.createClass({
 		return (
 			<div className="bugView">
 				<div className="row">
-					<div className="six columns">
+					<div className="nine columns">
 						<span className="bugID">Bug # {this.props.profile.bugID}</span><span className="status"> - {status}</span>
 						<div className="row">
 							<div className="six columns">
@@ -166,12 +182,18 @@ var BugView = React.createClass({
 						</div>
 						<hr />
 					</div>
-					<div className="six columns">
-						<button className="Unread u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "unread")}>Unread</button>
-						<button className="WIP u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "wip")}>WIP</button>
-						<button className="Complete u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "complete")}>Complete</button>
-						<button className="Scrapped u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "scrapped")}>Scrapped</button>
-						<button className="OnHold u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "onhold")}>Hold</button>
+					<div className="three columns">
+						<div className="row">
+							<div className="six columns">
+								<button className="Unread u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "unread")}>Unread</button>
+								<button className="WIP u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "wip")}>WIP</button>
+								<button className="Complete u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "complete")}>Complete</button>
+							</div>
+							<div className="six columns">
+								<button className="Scrapped u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "scrapped")}>Scrapped</button>
+								<button className="OnHold u-full-width" onClick={this.props.changeState.bind(null, this.props.profile.bugID, "onhold")}>Hold</button>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div className="row">

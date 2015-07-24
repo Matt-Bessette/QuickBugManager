@@ -1,3 +1,4 @@
+<?php	session_start(); if(!isset($_SESSION['USER_ID'], $_SESSION['USERNAME'])) header("Location: index.php"); ?>
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="lib/css/normalize.css">

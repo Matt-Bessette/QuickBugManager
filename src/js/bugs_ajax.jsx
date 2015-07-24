@@ -1,5 +1,8 @@
 var dispatch = {
 
+	getUserProfile : function(callback) {
+		var user_x = $.get("actions.php?action=user-profile");
+	},
 	getProjects : function(callback) {
 		var proj_x = $.get("actions.php?action=all-projects");
 		proj_x.done(function(json) {
@@ -12,7 +15,7 @@ var dispatch = {
 	getBugs : function(projID, callback) {
 		var bugs_x = $.get("actions.php?action=project-bugs&val1="+projID);
 		bugs_x.done(function(json) {
-			callback.setState({items :$.parseJSON(json), menu_state : "bugs", currentProj : projID, ver : callback.state.ver + 1});
+			callback.setState({items : $.parseJSON(json), menu_state : "bugs", currentProj : projID, ver : callback.state.ver + 1});
 		});
 		bugs_x.fail(function(){
 			console.log("Error getting bugs");
