@@ -48,6 +48,10 @@ var App = React.createClass({
 		dispatch.changeState(bugID, status, this);
 		dispatch.getBugs(this.state.currentProj, this);
 	},
+	BUGS_sendComment : function(bugID) {
+		dispatch.newComment(bugID, $("#commentbox").val(), this);
+		$("#commentbox").val("");
+	},
 	NEWPROJECT_addProject : function() {
 		dispatch.newProject($("#name").val(), $("#version").val(), this);
 	},
@@ -62,7 +66,7 @@ var App = React.createClass({
 		if(this.state.view_state === "project")
 			toView = (<div className="container"><ProjectView profile={this.state.view_profile} /></div>);
 		else if(this.state.view_state === "bug")
-			toView = (<div className="container"><BugView profile={this.state.view_profile} changeState={this.BUGS_changeState} /></div>);
+			toView = (<div className="container"><BugView profile={this.state.view_profile} changeState={this.BUGS_changeState} sendComment={this.BUGS_sendComment} /></div>);
 		else if(this.state.view_state === "new_project")
 			toView = (<div className="container"><NewProject addProject={this.NEWPROJECT_addProject} /></div>);
 

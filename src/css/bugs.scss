@@ -1,6 +1,14 @@
 $menuWidth : 23%;
 $menuHeight : 100%;
 
+body {
+	font-size:1.2em;
+}
+
+hr {
+	margin:0px;
+}
+
 .container { 
 	height: 90%;
 	width:100%;
@@ -36,8 +44,6 @@ ul {
 	}
 }
 
-
-
 .bug {
 	.bugID {
 		text-align: center;
@@ -58,9 +64,6 @@ ul {
 .bugView {
 	.description {
 		height:25%;
-	}
-	span {
-		font-size:1.15em;
 	}
 }
 
@@ -101,7 +104,8 @@ $commentMargin : 15px;
   text-align:center;
   font-weight:bold;
   margin-right:4px;
-  font-size:0.9em;
+  margin-top:12px;
+  margin-bottom: 12px;
 }
 .tag i {
   cursor:pointer;
@@ -111,49 +115,13 @@ $commentMargin : 15px;
   color:#FFF;
   border-radius:10%;
   margin-right:2px;
-  
+  font-size:0.9em;
 }
 .blue{
   background-color:#4D8FFC;
 }
 .red {
   background-color:#FF4500
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.bugObject2:hover {
-	border: 1px solid black;
-}
-.edit{
-	padding: 5px;
-	margin-bottom: 10px;
-}
-
-.styling{
-	border-bottom: 1px solid black;
-}
-
-.view {
-	overflow-y:auto;
-	height: 100%;
 }
 
 .Unread {

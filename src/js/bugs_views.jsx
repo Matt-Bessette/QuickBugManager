@@ -147,10 +147,11 @@ var BugView = React.createClass({
 		}
 		var comments = this.props.profile.COMMENTS.map(function(comment, i) {
 			return (
-				<div className="comment">
-					{comment.submitted} - {comment.author}<br/>
-					<p>{comment.comment}</p>
-				</div>
+				<tr>
+					<td>{comment.author}</td>
+					<td>{comment.comment}</td>
+					<td>{comment.submitted}</td>
+				</tr>
 			);
 		});
 
@@ -197,7 +198,13 @@ var BugView = React.createClass({
 						<table>
 							<tr>
 								<td>TYPE</td>
-								<td>{this.props.profile.type}</td>
+								<td>
+									<select id="type" defaultValue={this.props.profile.type}>
+										<option value="cosmetic">cosmetic</option>
+										<option value="usability">usability</option>
+										<option value="functionality">functionality</option>
+									</select>
+								</td>
 							</tr>
 							<tr>
 								<td>MODULE</td>
@@ -220,6 +227,19 @@ var BugView = React.createClass({
 				</div>
 				<div className="row">
 					<h5>Comments</h5>
+					<table>
+						<tr>
+							<th>USER</th>
+							<th>COMMENT</th>
+							<th>WHEN</th>
+						</tr>
+						{comments}
+						<tr>
+							<td>YOU</td>
+							<td><textarea id="commentbox"></textarea></td>
+							<td><button className="button button-primary" onClick={this.props.sendComment.bind(null, this.props.profile.bugID)}>Submit</button></td>
+						</tr>
+					</table>
 				</div>
 			</div>
 		);
