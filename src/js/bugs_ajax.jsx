@@ -213,7 +213,7 @@ var dispatch = {
 		});
 	},
 
-	changeState : function(bugID, state, callback) {
+	editBugState : function(bugID, state, callback) {
 		var stateCode;
 		switch(state) {
 			case "unread": 		stateCode = "unread"; 	break;

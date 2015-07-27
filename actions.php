@@ -102,6 +102,14 @@
 				$stmt->execute(array($prof['dev']));
 				$prof['dev'] = $stmt->fetch(PDO::FETCH_ASSOC)['name'];
 
+				$stmt = $con->prepare("SELECT userID, name FROM users");
+				$stmt->execute();
+				$prof['ALLDEVS'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+				$stmt = $con->prepare("SELECT modules.moduleID, modules.name FROM modules, bugs WHERE modules.projID = bugs.projID AND bugs.bugID = ?");
+				$stmt->execute(array($val1));
+				$prof['ALLMODS'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 				echo json_encode($prof);
 			break;
 
@@ -229,8 +237,10 @@
 			break;
 
 			case "edit-comment-description":
+				$con->beginTransaction();
 				$stmt = $con->prepare("UPDATE comments SET comment = ? WHERE commentID = ?");
 				$stmt->execute(array($pdata['COMMENT'], $val1));
+				$con->commit();
 				echo json_encode(array("ok"=>"comment_updated"));
 			break;
 

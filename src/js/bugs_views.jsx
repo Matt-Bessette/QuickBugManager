@@ -47,7 +47,6 @@ var Bugs = React.createClass({
 	render : function() {
 		var ctx = this;
 		var filters = this.state.filter.split(" ");
-		console.log("Before map");
 		var bugs = this.props.bugs.map(function(bug, i) {
 
 			var valid = true;
@@ -80,7 +79,6 @@ var Bugs = React.createClass({
 				);
 			}
 		});
-		console.log("After map");
 		return (
 			<ul className="left-menu">
 				<li className="filter">
@@ -94,28 +92,6 @@ var Bugs = React.createClass({
 				</li>
 				{bugs}
 			</ul>
-		);
-	}
-});
-
-var NewProject = React.createClass({
-	render : function() {
-
-		return (
-			<div className="projectView">
-				<span className="name">Name: 
-					<input type="text" id="name" placeholder="Project Name" />
-				</span>
-				<br/>
-
-				<span className="owner">Owner: {this.props.user.name}</span><br/>
-				<span className="version toInput">Version: 
-					<input type="text" id="name" placeholder="Project Name" />
-				</span>
-				<br/>
-
-				<span className="submitted">Submitted: now</span>
-			</div>
 		);
 	}
 });
@@ -164,6 +140,18 @@ var BugView = React.createClass({
 			);
 		});
 
+		var developers = this.props.profile.ALLDEVS.map(function(dev, i) {
+			return (
+				<option value={dev.userID}>{dev.name}</option>
+			);
+		});
+
+		var modules = this.props.profile.ALLMODS.map(function(mod, i) {
+			return (
+				<option value={mod.moduleID}>{mod.name}</option>
+			);
+		});
+
 		return (
 			<div className="bugView">
 				<div className="row">
@@ -174,7 +162,7 @@ var BugView = React.createClass({
 						<h5>{this.props.profile.project}</h5>
 					</div>
 					<div className="four columns">
-						<select name="status" defaultValue={status}>
+						<select id="status" defaultValue={status} onChange={this.props.changeState.bind(null, this.props.profile.bugID)}>
 							<option value="Unread">Unread</option>
 							<option value="WIP">WIP</option>
 							<option value="Completed">Completed</option>
@@ -195,39 +183,61 @@ var BugView = React.createClass({
 				<hr />
 				<div className="row">
 					<div className="five columns">
-						<table>
+						<table><tbody>
 							<tr>
 								<td>TYPE</td>
 								<td>
-									<select id="type" defaultValue={this.props.profile.type}>
+									<select id="type" key={"1."+this.props.ver} defaultValue={this.props.profile.type} onChange={this.props.changeType.bind(null, this.props.profile.bugID)}>
 										<option value="cosmetic">cosmetic</option>
 										<option value="usability">usability</option>
-										<option value="functionality">functionality</option>
+										<option value="functional">functional</option>
 									</select>
 								</td>
 							</tr>
 							<tr>
 								<td>MODULE</td>
-								<td>{this.props.profile.module}</td>
+								<td>
+									<select id="module" key={"2."+this.props.ver} defaultValue={this.props.profile.module} onChange={this.props.changeModule.bind(null, this.props.profile.bugID)}>
+										{modules}
+									</select>
+								</td>
 							</tr>
 							<tr>
 								<td>DEV</td>
-								<td>{this.props.profile.dev}</td>
+								<td>
+									<select id="dev" key={"3."+this.props.ver} defaultValue={this.props.profile.dev} onChange={this.props.changeDev.bind(null, this.props.profile.bugID)}>
+										{developers}
+									</select>
+								</td>
 							</tr>
 							<tr>
 								<td>BROWSER</td>
-								<td>{this.props.profile.browser}</td>
+								<td>
+									<select id="browser" key={"5."+this.props.ver} defaultValue={this.props.profile.type} onChange={this.props.changeBrowser.bind(null, this.props.profile.bugID)}>
+										<option value="chrome">chrome</option>
+										<option value="firefox">firefox</option>
+										<option value="opera">opera</option>
+										<option value="safari">safari</option>
+										<option value="IE9+">IE9+</option>
+										<option value="IE8-">IE8-</option>
+										<option value="AndroidChrome">AndroidChrome</option>
+										<option value="AndroidFF">AndroidFF</option>
+										<option value="IOS">IOS</option>
+									</select>
+								</td>
 							</tr>
-						</table>
+						</tbody></table>
 					</div>
 					<div className="seven columns">
 						<h5>Description</h5>
-						<p>{this.props.profile.description}</p>
+						<textarea key={"4."+this.props.ver} id="description">{this.props.profile.description}</textarea>
+						<button className="button button-primary" onClick={this.props.updateDescription.bind(null, this.props.profile.bugID)}>Update</button>
+						<span id="descupdate"></span>
 					</div>
 				</div>
 				<div className="row">
 					<h5>Comments</h5>
-					<table>
+					<table><tbody>
 						<tr>
 							<th>USER</th>
 							<th>COMMENT</th>
@@ -239,7 +249,7 @@ var BugView = React.createClass({
 							<td><textarea id="commentbox"></textarea></td>
 							<td><button className="button button-primary" onClick={this.props.sendComment.bind(null, this.props.profile.bugID)}>Submit</button></td>
 						</tr>
-					</table>
+					</tbody></table>
 				</div>
 			</div>
 		);
