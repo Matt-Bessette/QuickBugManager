@@ -21,6 +21,15 @@ var dispatch = {
 			console.log("Error getting bugs");
 		});
 	},
+	getModules : function(projID, callback) {
+		var modules_x = $.get("actions.php?action=project-modules&val1="+projID);
+		modules_x.done(function(json) {
+			callback.setState({items : $.parseJSON(json), currentProj : projID, menu_state : "modules", ver : callback.state.ver + 1});
+		});
+		modules_x.fail(function() {
+			console.log("Error getting modules");
+		});
+	},
 	procBug : function(bugID, callback) {
 		var bug_x = $.get("actions.php?action=bug-profile&val1="+bugID);
 		bug_x.done(function(json) {
@@ -33,36 +42,45 @@ var dispatch = {
 	procProject : function(projID, callback) {
 		var proj_x = $.get("actions.php?action=project-profile&val1="+projID);
 		proj_x.done(function(json) {
-			callback.setState({view_profile : $.parseJSON(json), view_state : "project", ver : callback.state.ver + 1});
+			callback.setState({view_profile : $.parseJSON(json), view_state : "project", ver : callback.state.ver + 1, currentProj : projID});
 		});
 		proj_x.fail(function() {
 			console.log("Error getting project profile");
 		});
 	},
+	procModule : function(moduleID, callback) {
+		var module_x = $.get("actions.php?action=module-profile&val1="+moduleID);
+		module_x.done(function(json) {
+			callback.setState({view_profile : $.parseJSON(json), view_state : "module", ver : callback.state.ver + 1});
+		});
+		module_x.fail(function() {
+			console.log("Error getting module profile");
+		});
+	},
 
-	newProject : function(name, version, callback) {
+	newProject : function(callback) {
 		var proj_x = $.ajax({
 			type : "POST",
-			url : "actions.php?action=new-project",
-			data : {NAME : name, VERSION : version}
+			url : "actions.php?action=new-project"
 		});
-		proj_x.done(function() {
+		proj_x.done(function(json) {
+			var id_json = $.parseJSON(json);
 			dispatch.getProjects(callback);
+			dispatch.procProject(id_json.id, callback);
 		});
 		proj_x.fail(function() {
 			console.log("Error creating project");
 		});
 	},
-	newBug : function(projID, description, browser, type, callback) {
+	newBug : function(projID, callback) {
 		var bug_x = $.ajax({
 			type : "POST",
-			url : "actions.php?action=new-bug&val1="+projID,
-			data : {DESCRIPTION : description, BROWSER : browser, TYPE : type}
+			url : "actions.php?action=new-bug&val1="+projID
 		});
 		bug_x.done(function(json) {
 			var id = $.parseJSON(json);
-			dispatch.procBug(id.id, callback);
 			dispatch.getBugs(projID, callback);
+			dispatch.procBug(id.id, callback);
 		});
 		bug_x.fail(function() {
 			console.log("Error creating bug");
@@ -81,14 +99,15 @@ var dispatch = {
 			console.log("Error creating comment");
 		});
 	},
-	newModule : function(projID, name, callback) {
+	newModule : function(projID, callback) {
 		var module_x = $.ajax({
 			type : "POST",
-			url : "actions.php?action=new-module&val1="+projID,
-			data : {NAME : name}
+			url : "actions.php?action=new-module&val1="+projID
 		});
-		module_x.done(function() {
-			dispatch.getProjects(callback);
+		module_x.done(function(json) {
+			var id = $.parseJSON(json);
+			dispatch.getModules(projID, callback);
+			dispatch.procModule(id.id, callback);
 		});
 		module_x.fail(function() {
 			console.log("Error creating module");
@@ -116,6 +135,7 @@ var dispatch = {
 		});
 		bug_x.done(function() {
 			dispatch.procBug(bugID, callback);
+			dispatch.getBugs(this.state.projID, callback);
 		});
 		bug_x.fail(function() {
 			console.log("Error updating bug");
@@ -125,7 +145,7 @@ var dispatch = {
 		var bug_x = $.ajax({
 			type : "POST",
 			url : "actions.php?action=edit-bug-dev&val1="+bugID,
-			data : {DESCRIPTION : description}
+			data : {DEV : dev}
 		});
 		bug_x.done(function() {
 			dispatch.procBug(bugID, callback);
@@ -151,7 +171,7 @@ var dispatch = {
 		var bug_x = $.ajax({
 			type : "POST",
 			url : "actions.php?action=edit-bug-type&val1="+bugID,
-			data : {type : type}
+			data : {TYPE : type}
 		});
 		bug_x.done(function() {
 			dispatch.procBug(bugID, callback);
@@ -181,6 +201,7 @@ var dispatch = {
 		});
 		proj_x.done(function() {
 			dispatch.getProjects(callback);
+			dispatch.procProject(projID, callback);
 		});
 		proj_x.fail(function() {
 			console.log("Error updating project");
@@ -194,6 +215,7 @@ var dispatch = {
 		});
 		proj_x.done(function() {
 			dispatch.getProjects(callback);
+			dispatch.procProject(projID, callback);
 		});
 		proj_x.fail(function() {
 			console.log("Error updating project");
@@ -202,11 +224,11 @@ var dispatch = {
 	editModuleName : function(moduleID, name, callback) {
 		var module_x = $.ajax({
 			type : "POST",
-			url : "acitons.php?edit-module-name&val1="+moduleID,
+			url : "actions.php?action=edit-module-name&val1="+moduleID,
 			data : {NAME : name}
 		});
 		module_x.done(function() {
-			dispatch.getProjects(callback);
+			dispatch.getModules(callback.state.currentProj, callback);
 		});
 		module_x.fail(function() {
 			console.log("Error updating module");

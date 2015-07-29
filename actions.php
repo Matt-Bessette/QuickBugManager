@@ -52,15 +52,18 @@
 				);
 				$stmt->execute(array($val1));
 				$prof = $stmt->fetch(PDO::FETCH_ASSOC);
+				echo json_encode($prof);
+			break;
+
+			case "project-modules":
 				$stmt = $con->prepare("SELECT moduleID, name FROM modules WHERE projID = ?");
 				$stmt->execute(array($val1));
-				$prof['MODULES'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
-				echo json_encode($prof);
+				echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 			break;
 
 			case "project-bugs":
 				$stmt = $con->prepare(
-					"SELECT bugs.bugID, modules.name as module, users.name as dev, bugs.browser, bugs.type, bugs.status, bugs.submitted
+					"SELECT bugs.bugID, modules.name as module, users.name as dev, bugs.browser, bugs.theType, bugs.status, bugs.submitted
 					FROM bugs
 					INNER JOIN modules ON modules.moduleID = bugs.moduleID
 					INNER JOIN users ON users.userID = bugs.dev
@@ -73,7 +76,7 @@
 
 			case "bug-profile":
 				$stmt = $con->prepare(
-					"SELECT bugs.bugID, projects.name as project, bugs.projID, users.name as owner, bugs.dev, bugs.submitted, bugs.status, bugs.type, bugs.description, bugs.browser, modules.name as module
+					"SELECT bugs.bugID, projects.name as project, bugs.projID, users.name as owner, bugs.dev, bugs.submitted, bugs.status, bugs.theType, bugs.description, bugs.browser, modules.name as module
 					FROM bugs
 					INNER JOIN projects ON projects.projID = bugs.projID
 					INNER JOIN modules ON modules.moduleID = bugs.moduleID
@@ -121,11 +124,19 @@
 				echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 			break;
 
+			case "module-profile":
+				$stmt = $con->prepare(
+					"SELECT moduleID, name FROM modules WHERE moduleID = ?"
+				);
+				$stmt->execute(array($val1));
+				echo json_encode($stmt->fetch(PDO::FETCH_ASSOC));
+			break;
+
 			/*REVIEW, UNKNOWN HOW TO PROCEED*/
 
 			case "tag-bugs":
 				$stmt = $con->prepare(
-					"SELECT bugs.projID, bugs.bugID, modules.name as module, users.name as dev, bugs.browser, bugs.type, bugs.status
+					"SELECT bugs.projID, bugs.bugID, modules.name as module, users.name as dev, bugs.browser, bugs.theType, bugs.status
 					FROM tags
 					INNER JOIN bugs ON bugs.bugID = tags.bugID
 					INNER JOIN modules ON modules.moduleID = bugs.moduleID
@@ -153,21 +164,15 @@
 		switch($action) {
 			case "new-bug":
 				$con->beginTransaction();
-				$stmt = $con->prepare("INSERT INTO bugs (projID, maker, dev, description, browser, type, submitted, status, moduleID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+				$stmt = $con->prepare("INSERT INTO bugs (projID, maker, submitted) VALUES (?, ?, ?)");
 				$stmt->execute(array(
 					$val1,
 					$user,
-					0,
-					$pdata['DESCRIPTION'],
-					$pdata['BROWSER'],
-					$pdata['TYPE'],
-					date("Y-m-d H:i:s"),
-					"2",
-					0
+					date("Y-m-d H:i:s")
 				));
 				$id = $con->lastInsertId();
 				$con->commit();
-				echo json_encode(array("ok"=>"bug_created", "id"=>$id));
+				echo json_encode(array("ok"=>"bug_created", "id"=>$id, "pdo"=>$stmt->errorInfo()));
 			break;
 
 			case "new-comment":
@@ -179,20 +184,18 @@
 					$pdata['COMMENT'],
 					date("Y-m-d H:i:s")
 				));
-				echo json_encode(array("ok"=>"comment_created", "id"=>$con->lastInsertId()));
+				echo json_encode(array("ok"=>"comment_created", "id"=>$con->lastInsertId(), "pdo"=>$stmt->errorInfo()));
 				$con->commit();
 			break;
 
 			case "new-project":
 				$con->beginTransaction();
-				$stmt = $con->prepare("INSERT INTO projects (name, userID, version, submitted) VALUES (?, ?, ?, ?)");
+				$stmt = $con->prepare("INSERT INTO projects (userID, submitted) VALUES (?, ?)");
 				$stmt->execute(array(
-					$pdata['NAME'],
 					$user,
-					$pdata['VERSION'],
 					date("Y-m-d H:i:s")
 				));
-				echo json_encode(array("ok"=>"project_created", "id"=>$con->lastInsertId()));
+				echo json_encode(array("ok"=>"project_created", "id"=>$con->lastInsertId(), "pdo"=>$stmt->errorInfo()));
 				$con->commit();
 			break;
 
@@ -200,7 +203,7 @@
 				$con->beginTransaction();
 				$stmt = $con->prepare("INSERT INTO modules (projID, name) VALUES (?, ?)");
 				$stmt->execute(array($val1, $pdata['NAME']));
-				echo json_encode(array("ok"=>"module_created", "id"=>$con->lastInsertId()));
+				echo json_encode(array("ok"=>"module_created", "id"=>$con->lastInsertId(), "pdo"=>$stmt->errorInfo()));
 				$con->commit();
 			break;
 
@@ -208,58 +211,56 @@
 				$con->beginTransaction();
 				$stmt = $con->prepare("INSERT INTO tags (bugID, tag) VALUES (?, ?)");
 				$stmt->execute(array($val1, $pdata['TAG']));
-				echo json_encode(array("ok"=>"tag_created", "id"=>$con->lastInsertId()));
+				echo json_encode(array("ok"=>"tag_created", "id"=>$con->lastInsertId(), "pdo"=>$stmt->errorInfo()));
 				$con->commit();
 			break;
 
 			case "edit-bug-description":
 				$stmt = $con->prepare("UPDATE bugs SET description = ? WHERE bugID = ?");
-				$stmt->execute(array($pdata['DESCRIPTION']), $val1);
-				echo json_encode(array("ok"=>"bug_updated"));
+				$stmt->execute(array($pdata['DESCRIPTION'], $val1));
+				echo json_encode(array("ok"=>"bug_updated", "pdo"=>$stmt->errorInfo()));
 			break;
 
 			case "edit-bug-dev":
 				$stmt = $con->prepare("UPDATE bugs SET dev = ? WHERE bugID = ?");
-				$stmt->execute(array($pdata['DEV']), $val1);
-				echo json_encode(array("ok"=>"bug_updated"));
+				$stmt->execute(array($pdata['DEV'], $val1));
+				echo json_encode(array("ok"=>"bug_updated", "pdo"=>$stmt->errorInfo()));
 			break;
 
 			case "edit-bug-browser":
 				$stmt = $con->prepare("UPDATE bugs SET browser = ? WHERE bugID = ?");
-				$stmt->execute(array($pdata['BROWSER']), $val1);
-				echo json_encode(array("ok"=>"bug_updated"));
+				$stmt->execute(array($pdata['BROWSER'], $val1));
+				echo json_encode(array("ok"=>"bug_updated", "pdo"=>$stmt->errorInfo()));
 			break;
 
 			case "edit-bug-type":
-				$stmt = $con->prepare("UPDATE bugs SET type = ? WHERE bugID = ?");
-				$stmt->execute(array($pdata['TYPE']), $val1);
-				echo json_encode(array("ok"=>"bug_updated"));
+				$stmt = $con->prepare("UPDATE bugs SET theType = ? WHERE bugID = ?");
+				$stmt->execute(array($pdata['TYPE'], $val1));
+				echo json_encode(array("ok"=>"bug_updated", "pdo"=>$stmt->errorInfo()));
 			break;
 
 			case "edit-comment-description":
-				$con->beginTransaction();
 				$stmt = $con->prepare("UPDATE comments SET comment = ? WHERE commentID = ?");
 				$stmt->execute(array($pdata['COMMENT'], $val1));
-				$con->commit();
-				echo json_encode(array("ok"=>"comment_updated"));
+				echo json_encode(array("ok"=>"comment_updated", "pdo"=>$stmt->errorInfo()));
 			break;
 
 			case "edit-project-name":
 				$stmt = $con->prepare("UPDATE projects SET name = ? WHERE projID = ?");
 				$stmt->execute(array($pdata['NAME'], $val1));
-				echo json_encode(array("ok"=>"project_updated"));
+				echo json_encode(array("ok"=>"project_updated", "pdo"=>$stmt->errorInfo()));
 			break;
 
 			case "edit-project-version":
 				$stmt = $con->prepare("UPDATE projects SET version = ? WHERE projID = ?");
-				$stmt->execute(array($pdata['NAME'], $val1));
-				echo json_encode(array("ok"=>"project_updated"));
+				$stmt->execute(array($pdata['VERSION'], $val1));
+				echo json_encode(array("ok"=>"project_updated", "pdo"=>$stmt->errorInfo()));
 			break;
 
 			case "edit-module-name":
-				$stmt = $con->prepare("UPDATE modules SET name = ? WHERE projID = ?");
+				$stmt = $con->prepare("UPDATE modules SET name = ? WHERE moduleID = ?");
 				$stmt->execute(array($pdata['NAME'], $val1));
-				echo json_encode(array("ok"=>"module_updated"));
+				echo json_encode(array("ok"=>"module_updated", "pdo"=>$stmt->errorInfo()));
 			break;
 
 			default:

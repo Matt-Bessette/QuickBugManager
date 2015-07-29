@@ -16,7 +16,9 @@ var Projects = React.createClass({
 					<span className="version">Version: {project.version}</span><br/>
 					<span className="owner">By: {project.owner}</span><br/>
 					<span className="submitted">{project.submitted}</span><br/>
-					<button className="button-loader" onClick={ctx.props.loader.bind(null, project.projID)}>Load</button> <button className="button-loader" onClick={ctx.props.editer.bind(null, project.projID)}>Edit</button>
+					<button className="button-loader" onClick={ctx.props.loader.bind(null, project.projID)}>Load</button> 
+					<button className="button-loader" onClick={ctx.props.editer.bind(null, project.projID)}>Edit</button> 
+					<button className="button-loader" onClick={ctx.props.modules.bind(null, project.projID)}>Modules</button>
 				</li>
 			);
 		});
@@ -26,6 +28,33 @@ var Projects = React.createClass({
 					+ Press here to add a project
 				</li>
 				{projects}
+			</ul>
+		);
+	}
+});
+
+var Modules = React.createClass({
+	render : function() {
+		var ctx = this;
+
+		var modules = this.props.modules.map(function(module, i) {
+			return (
+				<li className="bug" onClick={ctx.props.loader.bind(null, module.moduleID)}>
+					<span>Module# {module.moduleID}</span><br/>
+					<span>Name: {module.name}</span>
+				</li>
+			);
+		});
+
+		return (
+			<ul className="left-menu">
+				<li className="bug" onClick={this.props.back}>
+					Press here to go back to projects
+				</li>
+				<li className="bug" onClick={this.props.adder}>
+					+ Press here to add a module
+				</li>
+				{modules}
 			</ul>
 		);
 	}
@@ -74,7 +103,7 @@ var Bugs = React.createClass({
 						<span className="bugID">Bug #{bug.bugID}</span><br/>
 						<span className="module">Module: {bug.module}</span><br/>
 						<span className="browser">Browser: {bug.browser}</span><br/>
-						<span className="type">Type: {bug.type}</span>
+						<span className="type">Type: {bug.theType}</span>
 					</li>
 				);
 			}
@@ -99,11 +128,58 @@ var Bugs = React.createClass({
 var ProjectView = React.createClass({
 	render : function() {
 		return(
-			<div className="projectView">
-				<span className="name toInput">Name: {this.props.name}</span><br/>
-				<span className="owner">Owner: {this.props.owner}</span><br/>
-				<span className="version toInput">Version: {this.props.version}</span><br/>
-				<span className="submitted">Submitted: {this.props.submitted}</span>
+			<div className="row">
+				<table><tbody>
+					<tr>
+						<td>NAME</td>
+						<td>
+							<input type="text" defaultValue={this.props.profile.name} id="name" />
+						</td>
+						<td><button className="button button-primary" onClick={this.props.updateName.bind(null, this.props.profile.projID)}>Update</button></td>
+					</tr>
+					<tr>
+						<td>OWNER</td>
+						<td>
+							{this.props.profile.owner}
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>VERSION</td>
+						<td>
+							<input type="text" defaultValue={this.props.profile.version} id="version" />
+						</td>
+						<td><button className="button button-primary" onClick={this.props.updateVersion.bind(null, this.props.profile.projID)}>Update</button></td>
+					</tr>
+					<tr>
+						<td>CREATED</td>
+						<td>
+							{this.props.profile.submitted}
+						</td>
+						<td></td>
+					</tr>
+				</tbody></table>
+			</div>
+		);
+	}
+});
+
+var ModuleView = React.createClass({
+	render : function() {
+		return (
+			<div className="row">
+				<table><tbody>
+					<tr>
+						<td>Module ID</td>
+						<td>{this.props.profile.moduleID}</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>NAME</td>
+						<td><input type="text" id="name" key={"10."+this.props.ver} defaultValue={this.props.profile.name} /></td>
+						<td><button className="button button-primary" onClick={this.props.updateName.bind(null, this.props.profile.moduleID)}>Update</button></td>
+					</tr>
+				</tbody></table>
 			</div>
 		);
 	}
@@ -187,7 +263,8 @@ var BugView = React.createClass({
 							<tr>
 								<td>TYPE</td>
 								<td>
-									<select id="type" key={"1."+this.props.ver} defaultValue={this.props.profile.type} onChange={this.props.changeType.bind(null, this.props.profile.bugID)}>
+									<select id="type" key={"1."+this.props.ver} defaultValue={this.props.profile.theType} onChange={this.props.changeType.bind(null, this.props.profile.bugID)}>
+										<option value="none">none</option>
 										<option value="cosmetic">cosmetic</option>
 										<option value="usability">usability</option>
 										<option value="functional">functional</option>
@@ -198,6 +275,7 @@ var BugView = React.createClass({
 								<td>MODULE</td>
 								<td>
 									<select id="module" key={"2."+this.props.ver} defaultValue={this.props.profile.module} onChange={this.props.changeModule.bind(null, this.props.profile.bugID)}>
+										<option value="none">none</option>
 										{modules}
 									</select>
 								</td>
@@ -206,6 +284,7 @@ var BugView = React.createClass({
 								<td>DEV</td>
 								<td>
 									<select id="dev" key={"3."+this.props.ver} defaultValue={this.props.profile.dev} onChange={this.props.changeDev.bind(null, this.props.profile.bugID)}>
+										<option value="none">none</option>
 										{developers}
 									</select>
 								</td>
@@ -213,7 +292,8 @@ var BugView = React.createClass({
 							<tr>
 								<td>BROWSER</td>
 								<td>
-									<select id="browser" key={"5."+this.props.ver} defaultValue={this.props.profile.type} onChange={this.props.changeBrowser.bind(null, this.props.profile.bugID)}>
+									<select id="browser" key={"5."+this.props.ver} defaultValue={this.props.profile.theType} onChange={this.props.changeBrowser.bind(null, this.props.profile.bugID)}>
+										<option value="none">none</option>
 										<option value="chrome">chrome</option>
 										<option value="firefox">firefox</option>
 										<option value="opera">opera</option>
@@ -230,7 +310,7 @@ var BugView = React.createClass({
 					</div>
 					<div className="seven columns">
 						<h5>Description</h5>
-						<textarea key={"4."+this.props.ver} id="description">{this.props.profile.description}</textarea>
+						<textarea key={"4."+this.props.ver} id="description" defaultValue={this.props.profile.description}></textarea>
 						<button className="button button-primary" onClick={this.props.updateDescription.bind(null, this.props.profile.bugID)}>Update</button>
 						<span id="descupdate"></span>
 					</div>
