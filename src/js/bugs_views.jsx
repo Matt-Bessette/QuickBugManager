@@ -187,16 +187,6 @@ var ModuleView = React.createClass({
 
 var BugView = React.createClass({
 	render : function() {
-		var status;
-		switch(this.props.profile.status) {
-			case "1": status = "WIP"; 		break;
-			case "2": status = "Unread";	break;
-			case "3": status = "OnHold";	break;
-			case "4": status = "Complete";	break;
-			case "5": status = "Scrapped";	break;
-
-			default: status = "Unread";
-		}
 		var comments = this.props.profile.COMMENTS.map(function(comment, i) {
 			return (
 				<tr>
@@ -238,12 +228,12 @@ var BugView = React.createClass({
 						<h5>{this.props.profile.project}</h5>
 					</div>
 					<div className="four columns">
-						<select id="status" defaultValue={status} onChange={this.props.changeState.bind(null, this.props.profile.bugID)}>
-							<option value="Unread">Unread</option>
-							<option value="WIP">WIP</option>
-							<option value="Completed">Completed</option>
-							<option value="Scraped">Scraped</option>
-							<option value="OnHold">OnHold</option>
+						<select id="status" defaultValue={this.props.profile.status} onChange={this.props.changeState.bind(null, this.props.profile.bugID)}>
+							<option value="2">Unread</option>
+							<option value="1">WIP</option>
+							<option value="4">Completed</option>
+							<option value="5">Scrapped</option>
+							<option value="3">OnHold</option>
 						</select>
 					</div>
 				</div>
@@ -275,7 +265,7 @@ var BugView = React.createClass({
 								<td>MODULE</td>
 								<td>
 									<select id="module" key={"2."+this.props.ver} defaultValue={this.props.profile.module} onChange={this.props.changeModule.bind(null, this.props.profile.bugID)}>
-										<option value="none">none</option>
+										<option value="0">none</option>
 										{modules}
 									</select>
 								</td>

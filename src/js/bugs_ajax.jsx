@@ -238,12 +238,12 @@ var dispatch = {
 	editBugState : function(bugID, state, callback) {
 		var stateCode;
 		switch(state) {
-			case "unread": 		stateCode = "unread"; 	break;
-			case "wip": 		stateCode = "wip";		break;
-			case "complete": 	stateCode = "complete";	break;
-			case "scrapped": 	stateCode = "scrapped";	break;
-			case "onhold": 		stateCode = "hold";		break;
-			default: 			stateCode = 0;
+			case "2": 		stateCode = "unread"; 	break;
+			case "1": 		stateCode = "wip";		break;
+			case "4": 		stateCode = "complete";	break;
+			case "5": 		stateCode = "scrapped";	break;
+			case "3": 		stateCode = "hold";		break;
+			default: 		stateCode = 0;
 		}
 		if(stateCode !== 0) {
 			var state_x = $.ajax({
@@ -252,6 +252,7 @@ var dispatch = {
 			});
 			state_x.done(function() {
 				dispatch.procBug(bugID, callback);
+				dispatch.getBugs(callback.state.currentProj, callback);
 			});
 			state_x.fail(function() {
 				console.log("Error changing bug state");
